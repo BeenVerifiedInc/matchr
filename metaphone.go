@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const defaultMaxLength = 4
+
 type metaphoneresult struct {
 	// the maximum number of code values to calculate
 	maxLength int
@@ -607,7 +609,7 @@ func conditionM0(input runestring, index int) bool {
 //
 // More information about this algorithm can be found on Wikipedia at
 // http://en.wikipedia.org/wiki/Metaphone.
-func DoubleMetaphone(s1 string) (string, string) {
+func DoubleMetaphone(s1 string, maxLength ...int) (string, string) {
 	// trim, upper space
 	s1 = cleanInput(s1)
 
@@ -623,7 +625,12 @@ func DoubleMetaphone(s1 string) (string, string) {
 		index += 1
 	}
 
-	result := newMetaphoneresult(4, true)
+	length := defaultMaxLength
+	if len(maxLength) != 0 {
+		length = maxLength[0]
+	}
+
+	result := newMetaphoneresult(length, true)
 
 	for !result.isComplete() && index <= len(input)-1 {
 		c := rune(input.SafeAt(index))
